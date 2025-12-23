@@ -1,39 +1,77 @@
+import { useState } from "react";
 import { Link } from "react-router-dom";
 
 export default function Login() {
+  const [form, setForm] = useState({
+    email: "",
+    password: "",
+  });
+
+  const [errors, setErrors] = useState({});
+
+  const validate = () => {
+    const newErrors = {};
+
+    if (!form.email) {
+      newErrors.email = "Email is required";
+    } else if (!/\S+@\S+\.\S+/.test(form.email)) {
+      newErrors.email = "Enter a valid email";
+    }
+
+    if (!form.password) {
+      newErrors.password = "Password is required";
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (!validate()) return;
+
+    // Backend integration later
+    console.log("Login data:", form);
+  };
+
   return (
     <main className="min-h-screen bg-surface flex items-center justify-center px-6">
       <div className="w-full max-w-md bg-white rounded-xl shadow-sm p-8">
-        {/* Header */}
-        <div className="text-center">
-          <h1 className="text-3xl font-bold text-primary">
-            Welcome back to StartIQ
-          </h1>
-          <p className="mt-2 text-muted">Log in to continue your preparation</p>
-        </div>
+        <h1 className="text-3xl font-bold text-primary text-center">
+          Welcome back to StartIQ
+        </h1>
 
-        {/* Form */}
-        <form className="mt-8 space-y-4">
+        <form onSubmit={handleSubmit} className="mt-8 space-y-4">
+          {/* Email */}
           <div>
             <label className="block text-sm font-medium text-primary">
               Email
             </label>
             <input
               type="email"
-              placeholder="you@example.com"
-              className="mt-1 w-full border border-surface rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-accent"
+              value={form.email}
+              onChange={(e) => setForm({ ...form, email: e.target.value })}
+              className="mt-1 w-full border rounded-lg px-4 py-2 focus:ring-2 focus:ring-accent outline-none"
             />
+            {errors.email && (
+              <p className="text-sm text-red-500 mt-1">{errors.email}</p>
+            )}
           </div>
 
+          {/* Password */}
           <div>
             <label className="block text-sm font-medium text-primary">
               Password
             </label>
             <input
               type="password"
-              placeholder="Enter your password"
-              className="mt-1 w-full border border-surface rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-accent"
+              value={form.password}
+              onChange={(e) => setForm({ ...form, password: e.target.value })}
+              className="mt-1 w-full border rounded-lg px-4 py-2 focus:ring-2 focus:ring-accent outline-none"
             />
+            {errors.password && (
+              <p className="text-sm text-red-500 mt-1">{errors.password}</p>
+            )}
           </div>
 
           <button
@@ -44,7 +82,6 @@ export default function Login() {
           </button>
         </form>
 
-        {/* Footer */}
         <p className="mt-6 text-sm text-center text-muted">
           Don’t have an account?{" "}
           <Link to="/signup" className="text-accent font-medium">
