@@ -14,6 +14,7 @@ import DashboardHome from "./pages/DashboardHome";
 import DashboardResume from "./pages/DashboardResume";
 import DashboardKeywords from "./pages/DashboardKeywords";
 import DashboardRoadmap from "./pages/DashboardRoadmap";
+import PrivateRoute from "./routes/PrivateRoute";
 
 export default function App() {
   return (
@@ -28,12 +29,15 @@ export default function App() {
       <Route path="/pricing" element={<Pricing />} />
       <Route path="/dashboard" element={<Dashboard />} />
       <Route path="/profile" element={<Profile />} />
-      <Route path="/dashboard" element={<DashboardLayout />}>
-        <Route index element={<DashboardHome />} />
-        <Route path="resume" element={<DashboardResume />} />
-        <Route path="keywords" element={<DashboardKeywords />} />
-        <Route path="roadmap" element={<DashboardRoadmap />} />
-        <Route path="profile" element={<Profile />} />
+      import PrivateRoute from "./routes/PrivateRoute";
+      <Route element={<PrivateRoute />}>
+        <Route path="/dashboard" element={<DashboardLayout />}>
+          <Route index element={<DashboardHome />} />
+          <Route path="resume" element={<DashboardResume />} />
+          <Route path="keywords" element={<DashboardKeywords />} />
+          <Route path="roadmap" element={<DashboardRoadmap />} />
+          <Route path="profile" element={<Profile />} />
+        </Route>
       </Route>
     </Routes>
   );

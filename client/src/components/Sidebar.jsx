@@ -1,7 +1,11 @@
 import { NavLink } from "react-router-dom";
 import { Link } from "react-router-dom";
+import { logoutUser } from "../utils/auth";
+import { useNavigate } from "react-router-dom";
 
 export default function Sidebar({ isOpen, onClose }) {
+  const navigate = useNavigate();
+
   return (
     <>
       {/* Overlay for mobile */}
@@ -93,13 +97,16 @@ export default function Sidebar({ isOpen, onClose }) {
 
           {/* Logout (fixed at bottom) */}
           <div className="p-4 border-t">
-            <Link
-              to="/"
-              className="block w-full px-4 py-2 rounded-lg text-red-500 hover:bg-red-50 transition"
-              onClick={onClose}
+            <button
+              onClick={() => {
+                logoutUser();
+                onClose();
+                navigate("/");
+              }}
+              className="block w-full text-left px-4 py-2 rounded-lg text-red-500 hover:bg-red-50 transition"
             >
               Logout
-            </Link>
+            </button>
           </div>
         </div>
       </aside>

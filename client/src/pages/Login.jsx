@@ -1,5 +1,9 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import { loginUser } from "../utils/auth";
+import { useEffect } from "react";
+import { isAuthenticated } from "../utils/auth";
 
 export default function Login() {
   const [form, setForm] = useState({
@@ -26,13 +30,21 @@ export default function Login() {
     return Object.keys(newErrors).length === 0;
   };
 
+  const navigate = useNavigate();
+
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!validate()) return;
 
-    // Backend integration later
-    console.log("Login data:", form);
+    loginUser(); // mark user as logged in
+    navigate("/dashboard"); // redirect to dashboard
   };
+
+  useEffect(() => {
+    if (isAuthenticated()) {
+      navigate("/dashboard");
+    }
+  }, []);
 
   return (
     <main className="min-h-screen bg-surface flex items-center justify-center px-6">
