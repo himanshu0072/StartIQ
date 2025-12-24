@@ -1,5 +1,6 @@
 import Footer from "../components/Footer";
 import Navbar from "../components/Navbar";
+import { Link } from "react-router-dom";
 
 export default function About() {
   return (
@@ -81,12 +82,12 @@ export default function About() {
               Join StartIQ and prepare for jobs with clarity and confidence.
             </p>
             <div className="mt-6">
-              <a
-                href="/signup"
+              <Link
+                to="/signup"
                 className="inline-block bg-accent text-primary px-8 py-3 rounded-lg font-semibold hover:opacity-90 transition"
               >
                 Get Started with StartIQ
-              </a>
+              </Link>
             </div>
           </section>
         </div>
