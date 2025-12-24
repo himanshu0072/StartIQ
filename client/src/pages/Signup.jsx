@@ -1,5 +1,8 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import { signup } from "../services/authService";
+import { setAuth } from "../utils/auth";
+import { useNavigate } from "react-router-dom";
 
 export default function Signup() {
   const [form, setForm] = useState({
@@ -35,12 +38,19 @@ export default function Signup() {
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = (e) => {
+  const navigate = useNavigate();
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (!validate()) return;
 
-    // Backend integration later
-    console.log("Signup data:", form);
+    try {
+      const res = await signup(form);
+      setAuth(res.token);
+      navigate("/dashboard");
+    } catch (err) {
+      setErrors({ api: err.message || "Signup failed" });
+    }
   };
 
   return (
@@ -105,6 +115,11 @@ export default function Signup() {
           >
             Create Account
           </button>
+          {errors.api && (
+            <p className="text-sm text-red-500 mt-2 text-center">
+              {errors.api}
+            </p>
+          )}
         </form>
 
         <p className="mt-6 text-sm text-center text-muted">

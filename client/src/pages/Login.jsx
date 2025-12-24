@@ -1,9 +1,10 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
-import { loginUser } from "../utils/auth";
 import { useEffect } from "react";
 import { isAuthenticated } from "../utils/auth";
+import { login } from "../services/authService";
+import { setAuth } from "../utils/auth";
 
 export default function Login() {
   const [form, setForm] = useState({
@@ -32,12 +33,17 @@ export default function Login() {
 
   const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (!validate()) return;
 
-    loginUser(); // mark user as logged in
-    navigate("/dashboard"); // redirect to dashboard
+    try {
+      const res = await login(form); // API call
+      setAuth(res.token); // save JWT
+      navigate("/dashboard"); // go to dashboard
+    } catch (err) {
+      setErrors({ api: err.message || "Login failed" });
+    }
   };
 
   useEffect(() => {
