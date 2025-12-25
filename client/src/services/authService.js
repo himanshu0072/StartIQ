@@ -1,7 +1,9 @@
-const API_URL = "https://startiq-p27n.onrender.com/api/auth";
+// import axios from "axios";
+
+const API = import.meta.env.VITE_API_URL;
 
 export const signup = async (data) => {
-  const res = await fetch(`${API_URL}/signup`, {
+  const res = await fetch(`${API}/signup`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(data),
@@ -13,7 +15,7 @@ export const signup = async (data) => {
 };
 
 export const login = async (data) => {
-  const res = await fetch(`${API_URL}/login`, {
+  const res = await fetch(`${API}/login`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(data),

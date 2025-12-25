@@ -4,6 +4,16 @@ import cors from "cors";
 import dotenv from "dotenv";
 import authRoutes from "./routes/authRoutes.js";
 
+import cors from "cors";
+
+app.use(
+  cors({
+    origin: ["http://localhost:5173", "https://start-iq.vercel.app"],
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    credentials: true,
+  })
+);
+
 dotenv.config();
 
 const app = express();
