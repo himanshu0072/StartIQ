@@ -46,7 +46,7 @@ export default function Signup() {
 
     try {
       const res = await signup(form);
-      setAuth(res.token);
+      setAuth(res.token, res.user);
       navigate("/dashboard");
     } catch (err) {
       setErrors({ api: err.message || "Signup failed" });

@@ -39,7 +39,7 @@ export default function Login() {
 
     try {
       const res = await login(form); // API call
-      setAuth(res.token); // save JWT
+      setAuth(res.token, res.user);
       navigate("/dashboard"); // go to dashboard
     } catch (err) {
       setErrors({ api: err.message || "Login failed" });
