@@ -1,17 +1,12 @@
-import { useState } from "react";
-import { Link } from "react-router-dom";
-import { useNavigate } from "react-router-dom";
-import { useEffect } from "react";
-import { isAuthenticated } from "../utils/auth";
+import { useState, useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { login } from "../services/authService";
-import { setAuth } from "../utils/auth";
-import Toast from "../components/Toast";
+import { setAuth, isAuthenticated } from "../utils/auth";
 import { useToast } from "../context/useToast";
 
 export default function Login() {
+  const navigate = useNavigate();
   const { showToast } = useToast();
-
-  const [success, setSuccess] = useState("");
 
   const [form, setForm] = useState({
     email: "",
@@ -19,6 +14,13 @@ export default function Login() {
   });
 
   const [errors, setErrors] = useState({});
+
+  // Redirect if already logged in
+  useEffect(() => {
+    if (isAuthenticated()) {
+      navigate("/dashboard");
+    }
+  }, [navigate]);
 
   const validate = () => {
     const newErrors = {};
@@ -37,29 +39,29 @@ export default function Login() {
     return Object.keys(newErrors).length === 0;
   };
 
-  const navigate = useNavigate();
-
   const handleSubmit = async (e) => {
     e.preventDefault();
+
     if (!validate()) return;
 
     try {
-      const res = await login(form); // API call
-      setAuth(res.token, res.user);
-      setSuccess("Logged in successfully!");
-      showToast("Logged in successfully");
+      const res = await login(form);
 
-      navigate("/dashboard"); // go to dashboard
+      // ✅ Save auth
+      setAuth(res.token, res.user);
+
+      // ✅ Success toast
+      showToast("Login successful");
+
+      // ✅ Redirect
+      navigate("/dashboard");
     } catch (err) {
-      setErrors({ api: err.message || "Login failed" });
+      // ❌ Inline error only (no toast)
+      setErrors({
+        api: err?.message || "Invalid email or password",
+      });
     }
   };
-
-  useEffect(() => {
-    if (isAuthenticated()) {
-      navigate("/dashboard");
-    }
-  }, []);
 
   return (
     <main className="min-h-screen bg-surface flex items-center justify-center px-6">
@@ -77,7 +79,10 @@ export default function Login() {
             <input
               type="email"
               value={form.email}
-              onChange={(e) => setForm({ ...form, email: e.target.value })}
+              onChange={(e) => {
+                setForm({ ...form, email: e.target.value });
+                setErrors({});
+              }}
               className="mt-1 w-full border rounded-lg px-4 py-2 focus:ring-2 focus:ring-accent outline-none"
             />
             {errors.email && (
@@ -93,7 +98,10 @@ export default function Login() {
             <input
               type="password"
               value={form.password}
-              onChange={(e) => setForm({ ...form, password: e.target.value })}
+              onChange={(e) => {
+                setForm({ ...form, password: e.target.value });
+                setErrors({});
+              }}
               className="mt-1 w-full border rounded-lg px-4 py-2 focus:ring-2 focus:ring-accent outline-none"
             />
             {errors.password && (
@@ -101,7 +109,12 @@ export default function Login() {
             )}
           </div>
 
-          <Toast message={success} onClose={() => setSuccess("")} />
+          {/* 🔴 API ERROR ABOVE BUTTON */}
+          {errors.api && (
+            <p className="text-sm text-red-500 text-center font-medium">
+              {errors.api}
+            </p>
+          )}
 
           <button
             type="submit"
