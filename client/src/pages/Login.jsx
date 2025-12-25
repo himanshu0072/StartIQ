@@ -5,8 +5,11 @@ import { useEffect } from "react";
 import { isAuthenticated } from "../utils/auth";
 import { login } from "../services/authService";
 import { setAuth } from "../utils/auth";
+import Toast from "../components/Toast";
 
 export default function Login() {
+  const [success, setSuccess] = useState("");
+
   const [form, setForm] = useState({
     email: "",
     password: "",
@@ -40,6 +43,7 @@ export default function Login() {
     try {
       const res = await login(form); // API call
       setAuth(res.token, res.user);
+      setSuccess("Logged in successfully!");
       navigate("/dashboard"); // go to dashboard
     } catch (err) {
       setErrors({ api: err.message || "Login failed" });
@@ -91,6 +95,8 @@ export default function Login() {
               <p className="text-sm text-red-500 mt-1">{errors.password}</p>
             )}
           </div>
+
+          <Toast message={success} onClose={() => setSuccess("")} />
 
           <button
             type="submit"

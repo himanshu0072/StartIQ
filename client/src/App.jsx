@@ -15,6 +15,7 @@ import DashboardResume from "./pages/DashboardResume";
 import DashboardKeywords from "./pages/DashboardKeywords";
 import DashboardRoadmap from "./pages/DashboardRoadmap";
 import PrivateRoute from "./routes/PrivateRoute";
+import VerifyOtp from "./pages/VerifyOtp";
 
 export default function App() {
   return (
@@ -29,7 +30,7 @@ export default function App() {
       <Route path="/pricing" element={<Pricing />} />
       <Route path="/dashboard" element={<Dashboard />} />
       <Route path="/profile" element={<Profile />} />
-      import PrivateRoute from "./routes/PrivateRoute";
+      <Route path="/verify-otp" element={<VerifyOtp />} />
       <Route element={<PrivateRoute />}>
         <Route path="/dashboard" element={<DashboardLayout />}>
           <Route index element={<DashboardHome />} />

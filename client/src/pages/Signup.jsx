@@ -3,8 +3,11 @@ import { Link } from "react-router-dom";
 import { signup } from "../services/authService";
 import { setAuth } from "../utils/auth";
 import { useNavigate } from "react-router-dom";
+import Toast from "../components/Toast";
 
 export default function Signup() {
+  const [success, setSuccess] = useState("");
+
   const [form, setForm] = useState({
     name: "",
     email: "",
@@ -46,8 +49,9 @@ export default function Signup() {
 
     try {
       const res = await signup(form);
+      setSuccess("Account created successfully! Please verify your email.");
       setAuth(res.token, res.user);
-      navigate("/dashboard");
+      navigate("/verify-otp", { state: { userId: res.userId } });
     } catch (err) {
       setErrors({ api: err.message || "Signup failed" });
     }
@@ -108,6 +112,8 @@ export default function Signup() {
               <p className="text-sm text-red-500 mt-1">{errors.password}</p>
             )}
           </div>
+          
+          <Toast message={success} onClose={() => setSuccess("")} />
 
           <button
             type="submit"
