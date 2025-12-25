@@ -1,5 +1,6 @@
-import Footer from "../components/Footer";
+import { Link } from "react-router-dom";
 import Navbar from "../components/Navbar";
+import Footer from "../components/Footer";
 
 export default function Pricing() {
   return (
@@ -38,18 +39,19 @@ export default function Pricing() {
                 <li>• Sample career roadmaps</li>
               </ul>
 
-              <a
-                href="/signup"
+              <Link
+                to="/signup"
                 className="mt-8 block text-center border border-primary text-primary py-2 rounded-lg hover:bg-primary hover:text-white transition"
               >
                 Start Free
-              </a>
+              </Link>
+
               <p className="mt-2 text-sm text-muted">
                 Takes less than 30 seconds
               </p>
             </div>
 
-            {/* Starter Plan (Recommended) */}
+            {/* Starter Plan */}
             <div className="bg-white p-8 rounded-xl shadow-md border-2 border-primary relative">
               <span className="absolute top-4 right-4 bg-primary text-white text-xs px-3 py-1 rounded-full">
                 Most Popular
@@ -72,12 +74,13 @@ export default function Pricing() {
                 <li>• Resume improvement tips</li>
               </ul>
 
-              <a
-                href="/signup"
+              <Link
+                to="/signup"
                 className="mt-8 block text-center bg-primary text-white py-2 rounded-lg hover:bg-opacity-90 transition"
               >
                 Get Starter
-              </a>
+              </Link>
+
               <p className="mt-2 text-sm text-muted">
                 Takes less than 30 seconds
               </p>
@@ -102,35 +105,38 @@ export default function Pricing() {
                 <li>• Priority updates</li>
               </ul>
 
-              <a
-                href="/signup"
+              <Link
+                to="/signup"
                 className="mt-8 block text-center border border-primary text-primary py-2 rounded-lg hover:bg-primary hover:text-white transition"
               >
                 Go Pro
-              </a>
+              </Link>
+
               <p className="mt-2 text-sm text-muted">
                 Takes less than 30 seconds
               </p>
             </div>
           </section>
 
-          {/* CTA */}
+          {/* CTA Section */}
           <section className="mt-20 bg-primary text-white rounded-xl p-10 text-center">
             <h2 className="text-3xl font-bold">Invest once. Prepare better.</h2>
             <p className="mt-4 text-lg opacity-90">
               Your career deserves structured preparation, not guesswork.
             </p>
+
             <div className="mt-6">
-              <a
-                href="/signup"
+              <Link
+                to="/signup"
                 className="inline-block bg-accent text-primary px-8 py-3 rounded-lg font-semibold hover:opacity-90 transition"
               >
                 Get Started with StartIQ
-              </a>
+              </Link>
             </div>
           </section>
         </div>
       </main>
+
       <Footer />
     </>
   );

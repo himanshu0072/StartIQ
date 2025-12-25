@@ -2,9 +2,12 @@ import { NavLink } from "react-router-dom";
 import { Link } from "react-router-dom";
 import { logoutUser } from "../utils/auth";
 import { useNavigate } from "react-router-dom";
+import { useToast } from "../context/useToast";
 
 export default function Sidebar({ isOpen, onClose }) {
   const navigate = useNavigate();
+
+  const { showToast } = useToast();
 
   return (
     <>
@@ -99,9 +102,9 @@ export default function Sidebar({ isOpen, onClose }) {
           <div className="p-4 border-t">
             <button
               onClick={() => {
-                logoutUser();
-                onClose();
-                navigate("/");
+                logoutUser(); // clear token + user
+                showToast("Logged out successfully");
+                navigate("/login"); // or "/"
               }}
               className="block w-full text-left px-4 py-2 rounded-lg text-red-500 hover:bg-red-50 transition"
             >

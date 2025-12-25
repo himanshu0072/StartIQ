@@ -6,8 +6,11 @@ import { isAuthenticated } from "../utils/auth";
 import { login } from "../services/authService";
 import { setAuth } from "../utils/auth";
 import Toast from "../components/Toast";
+import { useToast } from "../context/useToast";
 
 export default function Login() {
+  const { showToast } = useToast();
+
   const [success, setSuccess] = useState("");
 
   const [form, setForm] = useState({
@@ -44,6 +47,8 @@ export default function Login() {
       const res = await login(form); // API call
       setAuth(res.token, res.user);
       setSuccess("Logged in successfully!");
+      showToast("Logged in successfully");
+
       navigate("/dashboard"); // go to dashboard
     } catch (err) {
       setErrors({ api: err.message || "Login failed" });

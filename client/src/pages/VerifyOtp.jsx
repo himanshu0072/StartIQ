@@ -1,8 +1,11 @@
 import { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { setAuth } from "../utils/auth";
+import { useToast } from "../context/useToast";
 
 export default function VerifyOtp() {
+  const { showToast } = useToast();
+
   const [otp, setOtp] = useState("");
   const [error, setError] = useState("");
   const navigate = useNavigate();
@@ -23,6 +26,8 @@ export default function VerifyOtp() {
       if (!res.ok) throw data;
 
       setAuth(data.token, data.user);
+      showToast("Email verified successfully!");
+
       navigate("/dashboard");
     } catch (err) {
       setError(err.message || "Invalid OTP");
