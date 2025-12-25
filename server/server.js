@@ -4,6 +4,9 @@ import cors from "cors";
 import dotenv from "dotenv";
 import authRoutes from "./routes/authRoutes.js";
 
+dotenv.config();
+
+const app = express();
 
 app.use(
   cors({
@@ -12,10 +15,6 @@ app.use(
     credentials: true,
   })
 );
-
-dotenv.config();
-
-const app = express();
 
 // Middleware
 app.use(cors());
