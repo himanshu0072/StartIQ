@@ -1,4 +1,4 @@
-const API_URL = "https://startiq-p27n.onrender.com";
+const API_URL = "https://startiq-p27n.onrender.com/api/auth";
 
 export const signup = async (data) => {
   const res = await fetch(`${API_URL}/signup`, {
