@@ -57,7 +57,6 @@ export const registerUser = async (req, res) => {
 
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    // Generate OTP
     const otp = Math.floor(100000 + Math.random() * 900000).toString();
     const hashedOtp = crypto.createHash("sha256").update(otp).digest("hex");
 
@@ -70,28 +69,19 @@ export const registerUser = async (req, res) => {
       isVerified: false,
     });
 
-    // 🔒 SAFE EMAIL SEND
-    try {
-      await // Send email safely (non-blocking)
-      sendOtpEmail({
-        to: email,
-        name,
-        otp,
-      }).catch((err) => {
-        console.error("OTP email failed:", err);
-      });
-    } catch (emailError) {
-      console.error("OTP email failed:", emailError.message);
-      // Do NOT fail signup
-    }
-
-    return res.status(201).json({
+    // ✅ SEND RESPONSE FIRST (CRITICAL)
+    res.status(201).json({
       message: "Signup successful. Please verify OTP.",
       userId: user._id,
     });
+
+    // ✅ SEND EMAIL IN BACKGROUND (NO AWAIT)
+    sendOtpEmail({ to: email, name, otp })
+      .then(() => console.log("OTP email sent"))
+      .catch((err) => console.error("OTP email failed:", err));
   } catch (err) {
     console.error("Signup error:", err);
-    return res.status(500).json({ message: "Signup failed" });
+    res.status(500).json({ message: "Signup failed" });
   }
 };
 
