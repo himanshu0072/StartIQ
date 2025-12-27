@@ -16,7 +16,7 @@ export default function DashboardCards() {
         const token = getToken();
 
         const res = await fetch(
-          `https://startiq-p27n.onrender.com/api/analytics/dashboard`,
+          `https://startiq-p27n.onrender.com/api/dashboard`,
           {
             headers: {
               Authorization: `Bearer ${token}`,
