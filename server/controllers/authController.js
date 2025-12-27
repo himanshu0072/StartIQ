@@ -72,10 +72,13 @@ export const registerUser = async (req, res) => {
 
     // 🔒 SAFE EMAIL SEND
     try {
-      await sendOtpEmail({
+      await // Send email safely (non-blocking)
+      sendOtpEmail({
         to: email,
         name,
         otp,
+      }).catch((err) => {
+        console.error("OTP email failed:", err);
       });
     } catch (emailError) {
       console.error("OTP email failed:", emailError.message);
