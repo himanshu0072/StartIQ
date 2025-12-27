@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { signup } from "../services/authService";
-import { setAuth } from "../utils/auth";
 import { useNavigate } from "react-router-dom";
 import Toast from "../components/Toast";
 import { useToast } from "../context/useToast";
@@ -52,8 +51,12 @@ export default function Signup() {
 
     try {
       const res = await signup(form);
+
       showToast("Account created! Please verify your email.");
-      setAuth(res.token, res.user);
+
+      // ❌ DO NOT setAuth here
+      // setAuth(res.token, res.user);
+
       navigate("/verify-otp", { state: { userId: res.userId } });
     } catch (err) {
       setErrors({ api: err.message || "Signup failed" });
