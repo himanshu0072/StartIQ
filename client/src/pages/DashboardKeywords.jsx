@@ -3,6 +3,8 @@ import { getToken } from "../utils/auth";
 import { useToast } from "../context/useToast";
 import { ClipboardIcon, CheckIcon } from "@heroicons/react/24/outline";
 
+const API_URL = import.meta.env.VITE_API_URL;
+
 /* ---------------- KEYWORD DATA ---------------- */
 const keywordMap = {
   "Frontend Developer": [
@@ -62,14 +64,11 @@ export default function DashboardKeywords() {
   useEffect(() => {
     const fetchAnalytics = async () => {
       try {
-        const res = await fetch(
-          "http://localhost:5000/api/analytics/dashboard",
-          {
-            headers: {
-              Authorization: `Bearer ${getToken()}`,
-            },
-          }
-        );
+        const res = await fetch(`${API_URL}/api/analytics/dashboard`, {
+          headers: {
+            Authorization: `Bearer ${getToken()}`,
+          },
+        });
 
         const data = await res.json();
 

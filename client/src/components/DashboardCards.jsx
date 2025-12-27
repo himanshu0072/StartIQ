@@ -1,9 +1,8 @@
 import { useEffect, useState } from "react";
 import { getToken } from "../utils/auth";
 
-const API_URL = import.meta.env.VITE_API_URL;
-
 export default function DashboardCards() {
+  const API_URL = import.meta.env.VITE_API_URL;
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
