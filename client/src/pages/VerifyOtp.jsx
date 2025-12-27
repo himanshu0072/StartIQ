@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { setAuth } from "../utils/auth";
 import { useToast } from "../context/useToast";
@@ -12,11 +12,12 @@ export default function VerifyOtp() {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
-  // 🔒 Guard: user must come from signup
-  if (!state?.userId) {
-    navigate("/signup");
-    return null;
-  }
+  // ✅ Guard in useEffect (NOT render)
+  useEffect(() => {
+    if (!state?.userId) {
+      navigate("/signup");
+    }
+  }, [state, navigate]);
 
   const handleVerify = async () => {
     if (!otp || otp.length !== 6) {
@@ -29,7 +30,7 @@ export default function VerifyOtp() {
       setError("");
 
       const res = await fetch(
-        `${import.meta.env.VITE_API_URL}/api/auth/verify-otp`,
+        `${import.meta.env.VITE_API_URL}/auth/verify-otp`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
