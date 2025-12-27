@@ -2,6 +2,7 @@ import { useState } from "react";
 import { getToken } from "../utils/auth";
 
 export default function ResumeCheck() {
+  const API = import.meta.env.VITE_API_URL;
   const [resumeText, setResumeText] = useState("");
   const [jobDesc, setJobDesc] = useState("");
   const [result, setResult] = useState(null);
@@ -13,7 +14,7 @@ export default function ResumeCheck() {
     try {
       setLoading(true);
 
-      const res = await fetch("http://localhost:5000/api/resume/analyze", {
+      const res = await fetch(`${API}/api/resume/analyze`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
