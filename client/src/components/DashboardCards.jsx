@@ -15,7 +15,7 @@ export default function DashboardCards() {
       try {
         const token = getToken();
 
-        const res = await fetch(`${API_URL}/api/analytics/dashboard`, {
+        const res = await fetch(`${API_URL}/analytics/dashboard`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
