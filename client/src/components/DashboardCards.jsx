@@ -13,7 +13,7 @@ export default function DashboardCards() {
         const token = getToken();
         if (!token) throw new Error("Unauthorized");
 
-        const res = await fetch(`${API_URL}/analytics/dashboard`, {
+        const res = await fetch(`${API_URL}/api/analytics/dashboard`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
