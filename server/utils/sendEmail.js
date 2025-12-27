@@ -1,6 +1,7 @@
 import nodemailer from "nodemailer";
+import { otpEmailTemplate } from "./emailTemplates/otpEmail.js";
 
-export const sendEmail = async ({ to, subject, html }) => {
+export const sendOtpEmail = async ({ to, name, otp }) => {
   const transporter = nodemailer.createTransport({
     service: "gmail",
     auth: {
@@ -12,7 +13,7 @@ export const sendEmail = async ({ to, subject, html }) => {
   await transporter.sendMail({
     from: `"StartIQ" <${process.env.EMAIL_USER}>`,
     to,
-    subject,
-    html,
+    subject: "Your StartIQ verification code",
+    html: otpEmailTemplate({ name, otp }),
   });
 };

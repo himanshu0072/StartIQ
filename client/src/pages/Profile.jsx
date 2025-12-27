@@ -1,16 +1,21 @@
-import Sidebar from "../components/Sidebar";
-import DashboardHeader from "../components/DashboardHeader";
+import { useState } from "react";
+import { getUser } from "../utils/auth";
 
 export default function Profile() {
+  const user = getUser();
+
+  // ✅ Hooks are ALWAYS called
+  const [name, setName] = useState(() => user?.name || "");
+  const [email] = useState(() => user?.email || "");
+
+  // ✅ Conditional return AFTER hooks
+  if (!user) {
+    return null;
+  }
+
   return (
     <div className="min-h-screen bg-surface flex">
-      {/* Sidebar (desktop + mobile drawer ready) */}
-      {/* <Sidebar /> */}
-
-      {/* Main Content */}
       <div className="flex-1 flex flex-col">
-        {/* <DashboardHeader /> */}
-
         <main className="p-6 max-w-5xl">
           {/* Page Title */}
           <header>
@@ -33,7 +38,8 @@ export default function Profile() {
                 </label>
                 <input
                   type="text"
-                  placeholder="Your name"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
                   className="mt-1 w-full border border-surface rounded-lg px-4 py-2 focus:ring-2 focus:ring-accent outline-none"
                 />
               </div>
@@ -44,7 +50,7 @@ export default function Profile() {
                 </label>
                 <input
                   type="email"
-                  placeholder="you@example.com"
+                  value={email}
                   disabled
                   className="mt-1 w-full bg-surface border border-surface rounded-lg px-4 py-2 text-muted cursor-not-allowed"
                 />
@@ -95,7 +101,7 @@ export default function Profile() {
               <button className="text-accent font-medium hover:underline">
                 Change Password
               </button>
-              <button className="text-red-500 font-medium hover:underline">
+              <button className="ml-3 text-red-500 font-medium hover:underline">
                 Delete Account
               </button>
             </div>

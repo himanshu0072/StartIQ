@@ -61,13 +61,6 @@ export default function Navbar() {
           >
             Login
           </Link>
-
-          <Link
-            to="/signup"
-            className="bg-primary text-white px-5 py-2 rounded-lg hover:bg-opacity-90 transition"
-          >
-            Get Started
-          </Link>
         </div>
       </div>
     </nav>

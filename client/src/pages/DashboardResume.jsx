@@ -1,112 +1,102 @@
-// import Footer from "../components/Footer";
+import { useState } from "react";
+import { getToken } from "../utils/auth";
 
 export default function ResumeCheck() {
+  const [resumeText, setResumeText] = useState("");
+  const [jobDesc, setJobDesc] = useState("");
+  const [result, setResult] = useState(null);
+  const [loading, setLoading] = useState(false);
+
+  const handleAnalyze = async () => {
+    if (!resumeText || !jobDesc) return;
+
+    try {
+      setLoading(true);
+
+      const res = await fetch("http://localhost:5000/api/resume/analyze", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${getToken()}`,
+        },
+        body: JSON.stringify({
+          resumeText,
+          jobDescription: jobDesc,
+        }),
+      });
+
+      const data = await res.json();
+      setResult(data);
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
-    <>
-      <main className="min-h-screen bg-surface">
-        <div className="max-w-5xl mx-auto px-6 py-16">
-          {/* Page Header */}
-          <header className="text-center">
-            <h1 className="text-4xl md:text-5xl font-bold text-primary">
-              Resume Checker
-            </h1>
-            <p className="mt-4 text-lg text-muted max-w-2xl mx-auto">
-              Upload your resume and get instant feedback on ATS compatibility,
-              structure, and job readiness.
-            </p>
-          </header>
+    <main className="min-h-screen bg-surface">
+      <div className="max-w-5xl mx-auto px-6 py-16">
+        <header className="text-center">
+          <h1 className="text-4xl font-bold text-primary">
+            Resume ATS Checker
+          </h1>
+          <p className="mt-4 text-muted">
+            Paste your resume and job description to get ATS insights
+          </p>
+        </header>
 
-          {/* Upload Card */}
-          <section className="mt-12 bg-white rounded-xl shadow-sm p-8">
-            <h2 className="text-2xl font-semibold text-primary">
-              Upload Your Resume
-            </h2>
-            <p className="mt-2 text-muted">
-              Supported format: PDF (Max size: 2MB)
-            </p>
+        {/* INPUTS */}
+        <section className="mt-10 bg-white p-8 rounded-xl shadow-sm">
+          <textarea
+            placeholder="Paste your resume text here..."
+            value={resumeText}
+            onChange={(e) => setResumeText(e.target.value)}
+            className="w-full h-40 border rounded-lg p-4 mb-6"
+          />
 
-            <div className="mt-6 border-2 border-dashed border-surface rounded-lg p-8 text-center">
-              <input
-                type="file"
-                accept=".pdf"
-                className="hidden"
-                id="resumeUpload"
-              />
+          <textarea
+            placeholder="Paste job description here..."
+            value={jobDesc}
+            onChange={(e) => setJobDesc(e.target.value)}
+            className="w-full h-40 border rounded-lg p-4"
+          />
 
-              <label
-                htmlFor="resumeUpload"
-                className="cursor-pointer inline-block"
-              >
-                <div className="text-accent text-lg font-medium">
-                  Click to upload resume
-                </div>
-                <p className="mt-2 text-sm text-muted">
-                  or drag and drop your file here
-                </p>
-              </label>
-            </div>
-          </section>
+          <button
+            onClick={handleAnalyze}
+            disabled={loading}
+            className="mt-6 bg-primary text-white px-8 py-3 rounded-lg"
+          >
+            {loading ? "Analyzing..." : "Analyze Resume"}
+          </button>
+        </section>
 
-          {/* Analysis Preview (UI Only) */}
+        {/* RESULTS */}
+        {result && (
           <section className="mt-12 grid md:grid-cols-3 gap-6">
-            <div className="bg-white p-6 rounded-xl shadow-sm">
-              <h3 className="text-lg font-semibold text-primary">
-                ATS Compatibility
-              </h3>
-              <p className="mt-3 text-muted text-sm">
-                Checks if your resume can pass applicant tracking systems.
+            <div className="bg-white p-6 rounded-xl">
+              <h3 className="font-semibold">ATS Score</h3>
+              <p className="text-2xl text-accent mt-2">
+                {result.atsScore} / 100
               </p>
-              <div className="mt-4 h-2 bg-surface rounded">
-                <div className="h-2 w-1/3 bg-accent rounded"></div>
-              </div>
             </div>
 
-            <div className="bg-white p-6 rounded-xl shadow-sm">
-              <h3 className="text-lg font-semibold text-primary">
-                Resume Structure
-              </h3>
-              <p className="mt-3 text-muted text-sm">
-                Evaluates formatting, sections, and readability.
+            <div className="bg-white p-6 rounded-xl">
+              <h3 className="font-semibold">Matched Keywords</h3>
+              <p className="text-sm mt-2">
+                {result.matchedKeywords.join(", ")}
               </p>
-              <div className="mt-4 h-2 bg-surface rounded">
-                <div className="h-2 w-1/4 bg-accent rounded"></div>
-              </div>
             </div>
 
-            <div className="bg-white p-6 rounded-xl shadow-sm">
-              <h3 className="text-lg font-semibold text-primary">
-                Skill Match
-              </h3>
-              <p className="mt-3 text-muted text-sm">
-                Matches your skills with job requirements.
+            <div className="bg-white p-6 rounded-xl">
+              <h3 className="font-semibold">Missing Keywords</h3>
+              <p className="text-sm mt-2 text-red-600">
+                {result.missingKeywords.join(", ")}
               </p>
-              <div className="mt-4 h-2 bg-surface rounded">
-                <div className="h-2 w-1/5 bg-accent rounded"></div>
-              </div>
             </div>
           </section>
-
-          {/* CTA */}
-          <section className="mt-16 bg-primary text-white rounded-xl p-10 text-center">
-            <h2 className="text-3xl font-bold">
-              Want detailed resume insights?
-            </h2>
-            <p className="mt-4 text-lg opacity-90">
-              Sign up to unlock full resume analysis and personalized
-              suggestions.
-            </p>
-            <div className="mt-6">
-              <a
-                href="/signup"
-                className="inline-block bg-accent text-primary px-8 py-3 rounded-lg font-semibold hover:opacity-90 transition"
-              >
-                Get Full Analysis
-              </a>
-            </div>
-          </section>
-        </div>
-      </main>
-      {/* <Footer /> */}
-    </>
+        )}
+      </div>
+    </main>
   );
 }

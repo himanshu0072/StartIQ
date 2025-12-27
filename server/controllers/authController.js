@@ -2,7 +2,7 @@ import User from "../models/User.js";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import crypto from "crypto";
-import { sendEmail } from "../utils/sendEmail.js";
+import { sendOtpEmail } from "../utils/sendEmail.js";
 
 export const verifyEmailOtp = async (req, res) => {
   const { userId, otp } = req.body;
@@ -46,8 +46,14 @@ export const registerUser = async (req, res) => {
   try {
     const { name, email, password } = req.body;
 
+    if (!name || !email || !password) {
+      return res.status(400).json({ message: "All fields are required" });
+    }
+
     const exists = await User.findOne({ email });
-    if (exists) return res.status(400).json({ message: "User already exists" });
+    if (exists) {
+      return res.status(400).json({ message: "User already exists" });
+    }
 
     const hashedPassword = await bcrypt.hash(password, 10);
 
@@ -60,27 +66,29 @@ export const registerUser = async (req, res) => {
       email,
       password: hashedPassword,
       emailOtp: hashedOtp,
-      otpExpiresAt: Date.now() + 10 * 60 * 1000, // 10 min
+      otpExpiresAt: Date.now() + 10 * 60 * 1000,
+      isVerified: false,
     });
 
-    // Send email
-    await sendEmail({
-      to: email,
-      subject: "Verify your StartIQ account",
-      html: `
-        <h2>Email Verification</h2>
-        <p>Your OTP is:</p>
-        <h1>${otp}</h1>
-        <p>This OTP expires in 10 minutes.</p>
-      `,
-    });
+    // 🔒 SAFE EMAIL SEND
+    try {
+      await sendOtpEmail({
+        to: email,
+        name,
+        otp,
+      });
+    } catch (emailError) {
+      console.error("OTP email failed:", emailError.message);
+      // Do NOT fail signup
+    }
 
-    res.status(201).json({
-      message: "OTP sent to email",
+    return res.status(201).json({
+      message: "Signup successful. Please verify OTP.",
       userId: user._id,
     });
   } catch (err) {
-    res.status(500).json({ message: "Signup failed" });
+    console.error("Signup error:", err);
+    return res.status(500).json({ message: "Signup failed" });
   }
 };
 
@@ -91,6 +99,12 @@ export const loginUser = async (req, res) => {
 
     const user = await User.findOne({ email });
     if (!user) return res.status(400).json({ message: "Invalid credentials" });
+
+    if (!user.isVerified) {
+      return res
+        .status(403)
+        .json({ message: "Please verify your email first" });
+    }
 
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch)
@@ -109,6 +123,7 @@ export const loginUser = async (req, res) => {
       },
     });
   } catch (error) {
+    console.error("Login error:", error);
     res.status(500).json({ message: "Login failed" });
   }
 };

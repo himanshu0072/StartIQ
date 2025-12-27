@@ -14,5 +14,16 @@ export const isAuthenticated = () => {
 
 export const getUser = () => {
   const user = localStorage.getItem("startiq_user");
-  return user ? JSON.parse(user) : null;
+  if (!user) return null;
+
+  try {
+    return JSON.parse(user);
+  } catch {
+    return null;
+  }
+};
+
+export const getToken = () => {
+  const token = localStorage.getItem("startiq_token");
+  return token && token !== "null" && token !== "undefined" ? token : null;
 };
