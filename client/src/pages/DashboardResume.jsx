@@ -83,15 +83,18 @@ export default function ResumeCheck() {
 
             <div className="bg-white p-6 rounded-xl">
               <h3 className="font-semibold">Matched Keywords</h3>
-              <p className="text-sm mt-2">
-                {result.matchedKeywords.join(", ")}
+
+              <p>
+                {(result.matchedKeywords || []).join(", ") ||
+                  "No missing keywords detected"}
               </p>
             </div>
 
             <div className="bg-white p-6 rounded-xl">
               <h3 className="font-semibold">Missing Keywords</h3>
-              <p className="text-sm mt-2 text-red-600">
-                {result.missingKeywords.join(", ")}
+              <p>
+                {(result.missingKeywords || []).join(", ") ||
+                  "No missing keywords detected"}
               </p>
             </div>
           </section>

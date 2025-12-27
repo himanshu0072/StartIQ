@@ -28,14 +28,17 @@ export default function VerifyOtp() {
       setLoading(true);
       setError("");
 
-      const res = await fetch(`${import.meta.env.VITE_API_URL}/verify-otp`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          userId: state.userId,
-          otp,
-        }),
-      });
+      const res = await fetch(
+        `${import.meta.env.VITE_API_URL}/api/auth/verify-otp`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            userId: state.userId,
+            otp,
+          }),
+        }
+      );
 
       const data = await res.json();
 
