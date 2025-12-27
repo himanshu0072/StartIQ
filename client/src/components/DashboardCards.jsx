@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 
 export default function DashboardCards() {
+  const API_URL = import.meta.env.VITE_API_URL;
   const token = localStorage.getItem("startiq_token");
   const getToken = () => {
     return token;
@@ -14,14 +15,11 @@ export default function DashboardCards() {
       try {
         const token = getToken();
 
-        const res = await fetch(
-          "http://localhost:5000/api/analytics/dashboard",
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
+        const res = await fetch(`${API_URL}/api/analytics/dashboard`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
 
         if (!res.ok) {
           throw new Error("Failed to fetch dashboard analytics");
