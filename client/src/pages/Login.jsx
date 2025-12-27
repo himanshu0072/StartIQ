@@ -64,73 +64,75 @@ export default function Login() {
   };
 
   return (
-    <main className="min-h-screen bg-surface flex items-center justify-center px-6">
-      <div className="w-full max-w-md bg-white rounded-xl shadow-sm p-8">
-        <h1 className="text-3xl font-bold text-primary text-center">
-          Welcome back to StartIQ
-        </h1>
+    <>
+      <main className="min-h-screen bg-surface flex items-center justify-center px-6">
+        <div className="w-full max-w-md bg-white rounded-xl shadow-sm p-8">
+          <h1 className="text-3xl font-bold text-primary text-center">
+            Welcome back to StartIQ
+          </h1>
 
-        <form onSubmit={handleSubmit} className="mt-8 space-y-4">
-          {/* Email */}
-          <div>
-            <label className="block text-sm font-medium text-primary">
-              Email
-            </label>
-            <input
-              type="email"
-              value={form.email}
-              onChange={(e) => {
-                setForm({ ...form, email: e.target.value });
-                setErrors({});
-              }}
-              className="mt-1 w-full border rounded-lg px-4 py-2 focus:ring-2 focus:ring-accent outline-none"
-            />
-            {errors.email && (
-              <p className="text-sm text-red-500 mt-1">{errors.email}</p>
+          <form onSubmit={handleSubmit} className="mt-8 space-y-4">
+            {/* Email */}
+            <div>
+              <label className="block text-sm font-medium text-primary">
+                Email
+              </label>
+              <input
+                type="email"
+                value={form.email}
+                onChange={(e) => {
+                  setForm({ ...form, email: e.target.value });
+                  setErrors({});
+                }}
+                className="mt-1 w-full border rounded-lg px-4 py-2 focus:ring-2 focus:ring-accent outline-none"
+              />
+              {errors.email && (
+                <p className="text-sm text-red-500 mt-1">{errors.email}</p>
+              )}
+            </div>
+
+            {/* Password */}
+            <div>
+              <label className="block text-sm font-medium text-primary">
+                Password
+              </label>
+              <input
+                type="password"
+                value={form.password}
+                onChange={(e) => {
+                  setForm({ ...form, password: e.target.value });
+                  setErrors({});
+                }}
+                className="mt-1 w-full border rounded-lg px-4 py-2 focus:ring-2 focus:ring-accent outline-none"
+              />
+              {errors.password && (
+                <p className="text-sm text-red-500 mt-1">{errors.password}</p>
+              )}
+            </div>
+
+            {/* 🔴 API ERROR ABOVE BUTTON */}
+            {errors.api && (
+              <p className="text-sm text-red-500 text-center font-medium">
+                {errors.api}
+              </p>
             )}
-          </div>
 
-          {/* Password */}
-          <div>
-            <label className="block text-sm font-medium text-primary">
-              Password
-            </label>
-            <input
-              type="password"
-              value={form.password}
-              onChange={(e) => {
-                setForm({ ...form, password: e.target.value });
-                setErrors({});
-              }}
-              className="mt-1 w-full border rounded-lg px-4 py-2 focus:ring-2 focus:ring-accent outline-none"
-            />
-            {errors.password && (
-              <p className="text-sm text-red-500 mt-1">{errors.password}</p>
-            )}
-          </div>
+            <button
+              type="submit"
+              className="w-full bg-primary text-white py-2 rounded-lg hover:bg-opacity-90 transition"
+            >
+              Log In
+            </button>
+          </form>
 
-          {/* 🔴 API ERROR ABOVE BUTTON */}
-          {errors.api && (
-            <p className="text-sm text-red-500 text-center font-medium">
-              {errors.api}
-            </p>
-          )}
-
-          <button
-            type="submit"
-            className="w-full bg-primary text-white py-2 rounded-lg hover:bg-opacity-90 transition"
-          >
-            Log In
-          </button>
-        </form>
-
-        <p className="mt-6 text-sm text-center text-muted">
-          Don’t have an account?{" "}
-          <Link to="/signup" className="text-accent font-medium">
-            Sign up
-          </Link>
-        </p>
-      </div>
-    </main>
+          <p className="mt-6 text-sm text-center text-muted">
+            Don’t have an account?{" "}
+            <Link to="/signup" className="text-accent font-medium">
+              Sign up
+            </Link>
+          </p>
+        </div>
+      </main>
+    </>
   );
 }
