@@ -15,11 +15,14 @@ export default function DashboardCards() {
       try {
         const token = getToken();
 
-        const res = await fetch(`${API_URL}/analytics/dashboard`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
+        const res = await fetch(
+          `https://startiq-p27n.onrender.com/api/analytics/dashboard`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
 
         if (!res.ok) {
           throw new Error("Failed to fetch dashboard analytics");
