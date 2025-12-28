@@ -5,14 +5,16 @@ const resend = new Resend(process.env.RESEND_API_KEY);
 
 export const sendOtpEmail = async ({ to, name, otp }) => {
   try {
-    await resend.emails.send({
-      from: "StartIQ <onboarding@resend.dev>", // works without domain
+    const result = await resend.emails.send({
+      from: "StartIQ <no-reply@resend.dev>",
       to,
       subject: "Your StartIQ verification code",
       html: otpEmailTemplate({ name, otp }),
     });
+
+    console.log("Resend response:", result);
   } catch (error) {
     console.error("Resend email error:", error);
-    throw error; // optional: remove throw if you want signup to continue
+    throw error;
   }
 };
