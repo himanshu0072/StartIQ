@@ -1,19 +1,18 @@
-import nodemailer from "nodemailer";
+import { Resend } from "resend";
 import { otpEmailTemplate } from "./emailTemplates/otpEmail.js";
 
-export const sendOtpEmail = async ({ to, name, otp }) => {
-  const transporter = nodemailer.createTransport({
-    service: "gmail",
-    auth: {
-      user: process.env.EMAIL_USER,
-      pass: process.env.EMAIL_PASS,
-    },
-  });
+const resend = new Resend(process.env.RESEND_API_KEY);
 
-  await transporter.sendMail({
-    from: `"StartIQ" <${process.env.EMAIL_USER}>`,
-    to,
-    subject: "Your StartIQ verification code",
-    html: otpEmailTemplate({ name, otp }),
-  });
+export const sendOtpEmail = async ({ to, name, otp }) => {
+  try {
+    await resend.emails.send({
+      from: "StartIQ <onboarding@resend.dev>", // works without domain
+      to,
+      subject: "Your StartIQ verification code",
+      html: otpEmailTemplate({ name, otp }),
+    });
+  } catch (error) {
+    console.error("Resend email error:", error);
+    throw error; // optional: remove throw if you want signup to continue
+  }
 };
