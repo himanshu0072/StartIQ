@@ -91,7 +91,9 @@ export const registerUser = async (req, res) => {
       isVerified: false,
     });
 
-    await sendOtpEmail({ to: email, name, otp });
+    sendOtpEmail({ to: email, name, otp })
+      .then(() => console.log("OTP email sent"))
+      .catch((err) => console.error("OTP email failed:", err.message));
 
     return res.status(201).json({
       message: "Signup successful. Please verify OTP.",
