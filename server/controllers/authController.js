@@ -50,17 +50,39 @@ export const registerUser = async (req, res) => {
       return res.status(400).json({ message: "All fields are required" });
     }
 
-    const exists = await User.findOne({ email });
-    if (exists) {
-      return res.status(400).json({ message: "User already exists" });
+    let user = await User.findOne({ email });
+
+    // 🔁 CASE 2: User exists but NOT verified → resend OTP
+    if (user && !user.isVerified) {
+      const otp = Math.floor(100000 + Math.random() * 900000).toString();
+      const hashedOtp = crypto.createHash("sha256").update(otp).digest("hex");
+
+      user.emailOtp = hashedOtp;
+      user.otpExpiresAt = Date.now() + 10 * 60 * 1000;
+      await user.save();
+
+      await sendOtpEmail({ to: email, name: user.name, otp });
+
+      return res.status(200).json({
+        message: "Account exists but not verified. OTP resent.",
+        userId: user._id,
+      });
     }
 
+    // ❌ CASE 3: User exists AND verified
+    if (user && user.isVerified) {
+      return res
+        .status(400)
+        .json({ message: "User already exists. Please login." });
+    }
+
+    // ✅ CASE 1: New user
     const hashedPassword = await bcrypt.hash(password, 10);
 
     const otp = Math.floor(100000 + Math.random() * 900000).toString();
     const hashedOtp = crypto.createHash("sha256").update(otp).digest("hex");
 
-    const user = await User.create({
+    user = await User.create({
       name,
       email,
       password: hashedPassword,
@@ -69,19 +91,15 @@ export const registerUser = async (req, res) => {
       isVerified: false,
     });
 
-    // ✅ SEND RESPONSE FIRST (CRITICAL)
-    res.status(201).json({
+    await sendOtpEmail({ to: email, name, otp });
+
+    return res.status(201).json({
       message: "Signup successful. Please verify OTP.",
       userId: user._id,
     });
-
-    // ✅ SEND EMAIL IN BACKGROUND (NO AWAIT)
-    sendOtpEmail({ to: email, name, otp })
-      .then(() => console.log("OTP email sent"))
-      .catch((err) => console.error("OTP email failed:", err));
   } catch (err) {
     console.error("Signup error:", err);
-    res.status(500).json({ message: "Signup failed" });
+    return res.status(500).json({ message: "Signup failed" });
   }
 };
 
