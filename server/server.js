@@ -5,6 +5,7 @@ import dotenv from "dotenv";
 import authRoutes from "./routes/authRoutes.js";
 import analyticsRoutes from "./routes/analyticsRoutes.js";
 import resumeRoutes from "./routes/resumeRoutes.js";
+import backgroundRoutes from "./routes/backgroundRoutes.js";
 
 dotenv.config();
 
@@ -31,6 +32,7 @@ app.use("/api/auth", authRoutes);
 app.use("/api/analytics", analyticsRoutes);
 
 app.use("/api/resume", resumeRoutes);
+app.use("/api/background", backgroundRoutes);
 
 // Start server
 const PORT = process.env.PORT || 5000;

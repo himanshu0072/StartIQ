@@ -38,6 +38,19 @@ export default function Sidebar({ isOpen, onClose }) {
           {/* Navigation (takes full height) */}
           <nav className="flex-1 p-4 space-y-2">
             <NavLink
+              to="/background"
+              end
+              onClick={onClose}
+              className={({ isActive }) =>
+                `block px-4 py-2 rounded-lg transition
+     ${isActive ? "bg-primary text-white" : "text-primary hover:bg-surface"}`
+              }
+            >
+              Background Details<br></br>
+              <small>Step 1 &#9650;</small>
+            </NavLink>
+
+            <NavLink
               to="/dashboard"
               end
               onClick={onClose}
@@ -47,6 +60,8 @@ export default function Sidebar({ isOpen, onClose }) {
               }
             >
               Dashboard
+              <br></br>
+              <small>Step 2 &#9650;</small>
             </NavLink>
 
             <NavLink
@@ -59,6 +74,8 @@ export default function Sidebar({ isOpen, onClose }) {
               }
             >
               Resume Checker
+              <br></br>
+              <small>Step 3 &#9650;</small>
             </NavLink>
 
             <NavLink
@@ -71,6 +88,8 @@ export default function Sidebar({ isOpen, onClose }) {
               }
             >
               Job Keywords
+              <br></br>
+              <small>Step 4 &#9650;</small>
             </NavLink>
 
             <NavLink
@@ -83,6 +102,8 @@ export default function Sidebar({ isOpen, onClose }) {
               }
             >
               Career Roadmap
+              <br></br>
+              <small>Step 5 &#9650;</small>
             </NavLink>
 
             <NavLink

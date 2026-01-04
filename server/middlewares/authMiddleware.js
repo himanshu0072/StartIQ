@@ -1,5 +1,6 @@
 import jwt from "jsonwebtoken";
 import User from "../models/User.js";
+import UserBackground from "../models/UserBackground.js";
 
 export const protect = async (req, res, next) => {
   try {
@@ -35,4 +36,16 @@ export const protect = async (req, res, next) => {
       message: "Not authorized, token invalid",
     });
   }
+};
+
+export const requireBackgroundCompleted = async (req, res, next) => {
+  const exists = await UserBackground.exists({ userId: req.user.id });
+
+  if (!exists) {
+    return res.status(403).json({
+      message: "Complete background details first",
+    });
+  }
+
+  next();
 };
